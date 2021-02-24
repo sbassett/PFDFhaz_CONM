@@ -1,7 +1,83 @@
-Post-fire Debris Flow Hazard
+Pre-fire Planning for Post-fire Debris Flow Hazard
 ================
 sbassett
-12/1/2020
+02/23/2021
+
+## Task Outline
+
+-   [ ] Develop a training set of areas burned during high-intensity
+    burn periods
+-   [ ] Filter/clip burned areas to remove areas burned under “good
+    fire” weather
+-   [ ] Develop explanatory variables to throw at the mode (or develop
+    hypotheses and test them?)
+-   [ ] Predict DNBR
+
+## Burn severity data to train the model
+
+Post-fire debris flow hazard models use differenced normalized burn
+ratio (dNBR) measured from remotely sensed imagery to characterize burn
+severity.
+
+As a fire burns across a landscape through time, fuel densities vary
+with space, and weather varies with time. Most of the area burned by
+wildfire is burned during high-intensity weather conditions that occur
+relatively rarely. The maps of burn severity that are used to
+parameterize burn severity models following a fire includes areas burned
+under all conditions, even mild conditions where the fire may have
+beneficial impacts on resource value. Predicting near worst-case burn
+severity from observed burn severity, without controlling for weather
+conditions during which the pixel burned will not help predict future
+high-severity burns. Are there areas that burned during relatively
+high-intensity fire weather conditions that dud not burn at
+high-severities? \[Orientation?\] of fire will also plausibly have an
+impact on burn severity, where areas that are hit by the brunt of the
+wind-driven active flaming front will be burned at higher severities
+than areas burned by a backing fire.
+
+Burn progression maps could be used to calculate the rate of growth
+(e.g. area/hour) for each perimeter, and then we could isolate the areas
+with growth rates over a certain threshold for training the model.
+Alternatively we could combine burn perimeters with meteorological data
+(or fire risk indicators) to identify the areas primarily burned during
+days with relatively high-ERCs. Gridmet data from
+<http://www.climatologylab.org/gridmet.html> has ERC data available from
+2013 onward.
+
+## Wildfires in CO and NM
+
+Based on query of the RAVG database
+(<https://fsapps.nwcg.gov/ravg/data-access>), there were 14 fires over
+8,000 hectares (\~19,768 acres) that burned in CO and NM between 2013
+and 2020. This list has a few fires from 2020, but is missing a few like
+the Cameron Peak and Pine Gulch fires. When will these data become
+available? Do I need to run my own dNBR calculation? It looks like RAVG
+isn;t produced until 45 days after a fire is deemed “contained”, given
+the end of the year, I wonder if these fires will be published soon (the
+45 days is up, but the fires were “controlled” in January 2021.)
+
+### West Fork Complex Trial \[currently pseudo code\]
+
+Download West Fork RAVG data
+<https://fsapps.nwcg.gov/mtbs/ravg_mysql/getZipFile.php?id=10407> \[use
+<https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/download.file>
+or RCurl (<https://cran.r-project.org/web/packages/RCurl/index.html>)?\]
+Unzip file \[use:
+<https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/unzip>\]
+Render a map of the dNBR or burn severity classes (Ravg only has CBI not
+classified dNBR/soil burn severity).
+
+    ravg_url_WestFork2013 <- "https://fsapps.nwcg.gov/mtbs/ravg_mysql/getZipFile.php?id=10407"
+
+Classify the RAVg dnbr raster into burn severity classes a la MTBS/BAER
+
+Download all perimeter data for this fire from NIFC FTP
+
+    pregression_url_WestFork2013 <- "https://ftp.nifc.gov/public/incident_specific_data/rocky_mtn/2013/West_Fork_Complex/GIS/20130713/GBT1_Progression.zip"
+
+Intersect overlapping polygons, calculate period growth (hectares),
+period duration (hours? minutes?), and period average growth rate
+(hectares per hour? minute?)
 
 ## R Markdown
 
